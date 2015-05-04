@@ -19,7 +19,31 @@ dependencies:
 
 test:
   override:
-    - bundle exec rake test:ios test:osx test:SecEncodeTransformTests
+    - set -o pipefail &&
+      xcodebuild
+        -scheme "Base32-iOS"
+        -sdk iphonesimulator
+        -destination 'platform=iOS Simulator,OS=8.1,name=iPhone 6'
+        -project Base32.xcodeproj
+        -configuration Release
+        clean test |
+      xcpretty --color --report junit --output $CIRCLE_TEST_REPORTS/xcode/ios-results.xml
+    - set -o pipefail &&
+      xcodebuild
+        -scheme "Base32-Mac"
+        -sdk macosx
+        -project Base32.xcodeproj
+        -configuration Release
+        clean test |
+      xcpretty --color --report junit --output $CIRCLE_TEST_REPORTS/xcode/mac-results.xml
+    - set -o pipefail &&
+      xcodebuild
+        -scheme "SecEncodeTransformTests"
+        -sdk macosx
+        -project Base32.xcodeproj
+        -configuration Release
+        clean test |
+      xcpretty --color --report junit --output $CIRCLE_TEST_REPORTS/xcode/SecEncodeTransformTests-results.xml
 
 notify:
   webhooks:
