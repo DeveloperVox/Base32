@@ -5,11 +5,8 @@ machine:
     version: "6.3.1"
 
 dependencies:
-  cache_directories:
-    - "vendor/bundle"
   pre:
     - curl 'https://developer.apple.com/certificationauthority/AppleWWDRCA.cer' -o certificates/AppleWWDRCA.cer
-    - brew update
     - brew install carthage
   override:
     - bundle install --path=vendor/bundle --binstubs=vendor/bin
@@ -26,7 +23,7 @@ test:
         -destination 'platform=iOS Simulator,OS=8.1,name=iPhone 6'
         -project Base32.xcodeproj
         -configuration Release
-        clean test |
+        test |
       xcpretty --color --report junit --output $CIRCLE_TEST_REPORTS/xcode/ios-results.xml
     - set -o pipefail &&
       xcodebuild
@@ -34,7 +31,7 @@ test:
         -sdk macosx
         -project Base32.xcodeproj
         -configuration Release
-        clean test |
+        test |
       xcpretty --color --report junit --output $CIRCLE_TEST_REPORTS/xcode/mac-results.xml
     - set -o pipefail &&
       xcodebuild
@@ -42,7 +39,7 @@ test:
         -sdk macosx
         -project Base32.xcodeproj
         -configuration Release
-        clean test |
+        test |
       xcpretty --color --report junit --output $CIRCLE_TEST_REPORTS/xcode/SecEncodeTransformTests-results.xml
 
 notify:
