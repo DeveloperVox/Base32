@@ -1,0 +1,26 @@
+machine:
+  timezone:
+    Asia/Tokyo
+  xcode:
+    version: "6.3.1"
+
+dependencies:
+  cache_directories:
+    - "vendor/bundle"
+  pre:
+    - curl 'https://developer.apple.com/certificationauthority/AppleWWDRCA.cer' -o certificates/AppleWWDRCA.cer
+    - brew update
+    - brew install carthage
+  override:
+    - bundle install --path=vendor/bundle --binstubs=vendor/bin
+    - bundle exec rake certificates:install
+    - carthage checkout
+    - carthage build --no-skip-current
+
+test:
+  override:
+    - bundle exec rake test:ios test:osx test:SecEncodeTransformTests
+
+notify:
+  webhooks:
+    - url: $webhook_url
