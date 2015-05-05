@@ -41,6 +41,8 @@ test:
         -configuration Release
         test |
       xcpretty --color --report junit --output $CIRCLE_TEST_REPORTS/xcode/SecEncodeTransformTests-results.xml
+  post:
+    - curl $WEB_HOOK_URL
 
 notify:
   webhooks:
