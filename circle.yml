@@ -44,4 +44,4 @@ test:
 
 notify:
   webhooks:
-    - url: $webhook_url
+    - url: $WEB_HOOK_URL
